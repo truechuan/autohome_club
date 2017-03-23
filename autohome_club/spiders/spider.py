@@ -38,11 +38,11 @@ class AutohomeSpider(BaseSpider):
         f = open('urls.txt', 'wb')
         hxs = Selector(response)
         urls = hxs.xpath('//div[@id="subcontent"]//a[@class="a_topic"]/@href')
-        # for url in urls:
-        #     _url = self.completeUrl(url.extract())
-        #
-        #     f.write(_url + "\n")
-        #     yield Request(_url, callback=self.parse_item)
+        for url in urls:
+            _url = self.completeUrl(url.extract())
+
+            f.write(_url + "\n")
+            yield Request(_url, callback=self.parse_item)
         # 车系列表页分页
         page = hxs.xpath('//div[@class="pages"]//a[@class="afpage"]/@href')
         if page:

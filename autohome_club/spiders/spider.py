@@ -25,7 +25,8 @@ class AutohomeSpider(BaseSpider):
     allowed_domains = ["autohome.com.cn"]
 
     start_urls = [
-        "http://club.autohome.com.cn/bbs/forum-c-3411-1.html"
+        # "http://club.autohome.com.cn/bbs/forum-c-3411-1.html",
+        "http://club.autohome.com.cn/bbs/thread-c-3411-60039060-1.html"
     ]
 
     def completeUrl(self, _url):
@@ -40,7 +41,6 @@ class AutohomeSpider(BaseSpider):
         urls = hxs.xpath('//div[@id="subcontent"]//a[@class="a_topic"]/@href')
         for url in urls:
             _url = self.completeUrl(url.extract())
-
             f.write(_url + "\n")
             yield Request(_url, callback=self.parse_item)
         # 车系列表页分页
@@ -80,15 +80,23 @@ class AutohomeSpider(BaseSpider):
                 item['date'] = _date
                 items.append(item)
             except BaseException:
-                print f.write(con.extract() + "\n")
-                print f.write("==================>>>>>>>>>>>>>>><<<<<<<<<<<<<=================\n")
+                print BaseException.message
+                f.write(con.extract() + "\n")
             yield item
 
-            # filename = response.url.split("/")[-1]
-            # with open(filename, 'wb') as f:
-            #     f.write(response.body)
+            # 论坛页分页
+            page = hxs.xpath('//div[@class="pages"]//a[@class="afpage"]/@href')
+            if page:
+                next_page = self.completeUrl(page.extract()[0])
+                yield Request(next_page, callback=self.parse_item)
+
 
     def getContext(self, con):
-        _text = con.xpath('.//div[@class="w740"]/text()').extract()[0]
+        if 0 != len(con.xpath('.//div[@class="w740"]//div[@class="yy_reply_cont"]').extract()):
+            _text = con.xpath('.//div[@class="w740"]//div[@class="yy_reply_cont"]/text()').extract()[0]
+        elif 0 == len(con.xpath('.//div[@class="w740"]/child::p').extract()):
+            _text = con.xpath('.//div[@class="w740"]/text()').extract()[0]
+        else:
+            _text = con.xpath('.//div[@class="w740"]/child::p/text()').extract()[0]
         _text.decode(default_encoding)
         return _text

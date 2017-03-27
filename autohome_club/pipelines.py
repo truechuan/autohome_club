@@ -14,7 +14,7 @@ class AutohomeClubPipeline(object):
         self.file = codecs.open('XC60.json', 'wb', encoding='utf-8')
 
     def process_item(self, item, spider):
-        if item['content'].strip() != "":
+        if item != {} and item['content'].strip() != "":
             line = json.dumps(dict(item)) + '\n'
             self.file.write(line.decode("unicode_escape"))
         return item

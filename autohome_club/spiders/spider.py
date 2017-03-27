@@ -25,8 +25,8 @@ class AutohomeSpider(BaseSpider):
     allowed_domains = ["autohome.com.cn"]
 
     start_urls = [
-        # "http://club.autohome.com.cn/bbs/forum-c-3411-1.html",
-        "http://club.autohome.com.cn/bbs/thread-c-3411-60039060-1.html"
+        "http://club.autohome.com.cn/bbs/forum-c-3411-1.html"
+        #"http://club.autohome.com.cn/bbs/thread-c-3411-60039060-1.html"
     ]
 
     def completeUrl(self, _url):

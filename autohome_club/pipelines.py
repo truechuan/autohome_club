@@ -8,13 +8,32 @@
 import json
 import codecs
 
+rules_dice = "../rules.txt"
+
 
 class AutohomeClubPipeline(object):
     def __init__(self):
-        self.file = codecs.open('XC60.json', 'wb', encoding='utf-8')
+        f = open(rules_dice)
+        lines = f.readlines();
+        rules = set()
+        for line in lines:
+            vals = line.split(",")
+            for val in vals:
+                rules.add(val)
+
+        self.rules = rules
+        self.used_file = codecs.open('XC60_used.json', 'wb', encoding='utf-8')
+        self.unused_file = codecs.open('XC60_unused.json', 'wb', encoding='utf-8')
 
     def process_item(self, item, spider):
         if item != {} and item['content'].strip() != "":
+            unused_flag = True
             line = json.dumps(dict(item)) + '\n'
-            self.file.write(line.decode("unicode_escape"))
+            for rule in self.rules:
+                if rule in item['content'].strip():
+                    self.used_file.write(line.decode("unicode_escape"))
+                    unused_flag = False
+                    break
+            if unused_flag:
+                self.unused_file.write(line.decode("unicode_escape"))
         return item

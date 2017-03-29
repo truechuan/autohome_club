@@ -15,6 +15,7 @@ from autohome_club.items import AutohomeClubItem
 
 default_encoding = 'utf-8'
 domain = 'http://club.autohome.com.cn'
+
 if sys.getdefaultencoding() != default_encoding:
     reload(sys)
     sys.setdefaultencoding(default_encoding)
@@ -36,18 +37,15 @@ class AutohomeSpider(BaseSpider):
 
     # 车系列表页
     def parse(self, response):
-        f = open('urls.txt', 'wb')
         hxs = Selector(response)
         urls = hxs.xpath('//div[@id="subcontent"]//a[@class="a_topic"]/@href')
         for url in urls:
             _url = self.completeUrl(url.extract())
-            f.write(_url + "\n")
             yield Request(_url, callback=self.parse_item)
         # 车系列表页分页
         page = hxs.xpath('//div[@class="pages"]//a[@class="afpage"]/@href')
         if page:
             next_page = self.completeUrl(page.extract()[0])
-            f.write(next_page + "\n")
             yield Request(next_page, callback=self.parse)
 
     # 车系列表页 -> 论坛讨论页面

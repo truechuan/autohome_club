@@ -53,10 +53,13 @@ COOKIES_ENABLED = False
 # Enable or disable downloader middlewares
 # See http://scrapy.readthedocs.org/en/latest/topics/downloader-middleware.html
 DOWNLOADER_MIDDLEWARES = {
-    'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware': None,
-    'autohome_club.middlewares.RotateUserAgentMiddleware': 400,
+    'autohome_club.middlewares.useragentmiddleware.RotateUserAgentMiddleware': 400,
+    'autohome_club.middlewares.autoproxymiddleware.AutoProxyMiddleware': 543
 }
-
+AUTO_PROXY = {
+    'download_timeout': 30,
+    'ban_code': [500, 502, 503, 504, 429]
+}
 # Enable or disable extensions
 # See http://scrapy.readthedocs.org/en/latest/topics/extensions.html
 # EXTENSIONS = {

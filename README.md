@@ -18,6 +18,5 @@
 </div>
 
 官网链接：https://www.smartproxy.cn/
-我的邀请码：WHEF59
 
 专属注册链接：[https://www.smartproxy.cn/regist](https://www.smartproxy.cn/regist?invite=WHEF59)
